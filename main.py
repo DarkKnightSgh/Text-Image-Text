@@ -10,7 +10,7 @@ def main():
 
     # Add two buttons for TEXT-IMAGE and IMAGE-TEXT
     if st.button("TEXT-IMAGE", key="text_image_button"):
-        run_streamlit_app("text_image_retrieval.py", 8050)
+        run_streamlit_app("transformers.py", 8050)
     
     if st.button("IMAGE-TEXT", key="image_text_button"):
         run_streamlit_app("app.py", 8051)
