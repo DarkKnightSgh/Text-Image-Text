@@ -2,7 +2,8 @@ TEXT-IMAGE-TEXT
 
 Algorithms for information Retrieval Project
 
-About:
+#About:
+
 Image-Text
 Takes an image as input,this image is passed to ViT model,a caption is generated.Based on the caption generated,using semantic embedding search with bleu score comparision,the top five captions similar to the generated caption along with corresponding images are retrieved.
 
