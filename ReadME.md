@@ -21,9 +21,9 @@ Disclaimer:Streamlit sometimes needs python virtual environment to run properly
 
 Download EncoderModel:
 
+### Downloading and Loading Universal Sentence Encoder (Version 4) using TensorFlow Hub
 
-#TensorFlow Universal Encoder Model Code 
-
+```python
 import tensorflow_hub as hub
 import ssl
 import certifi
@@ -45,11 +45,13 @@ if response.status_code == 200:
     with open("universal_sentence_encoder_4.tar.gz", "wb") as f:
         f.write(response.content)
     
-   
+    # Extract the model
     with tarfile.open("universal_sentence_encoder_4.tar.gz", "r:gz") as tar:
         tar.extractall()
     
-    
+    # Load the model
     model = hub.load(os.path.join("universal_sentence_encoder_4"))
 else:
     print("Failed to download the model:", response.status_code)
+
+
