@@ -3,6 +3,8 @@ TEXT-IMAGE-TEXT
 Algorithms for information Retrieval Project
 
 About:
+Image-Text
+Takes an image as input,this image is passed to ViT model,a caption is generated.Based on the caption generated,using semantic embedding search with bleu score comparision,the top five captions similar to the generated caption along with corresponding images are retrieved.
 
 
 Tech Used:
@@ -18,8 +20,6 @@ https://www.kaggle.com/datasets/adityajn105/flickr8k
 
 Disclaimer:Streamlit sometimes needs python virtual environment to run properly
 
-
-Download EncoderModel:
 
 ### Downloading and Loading Universal Sentence Encoder (Version 4) using TensorFlow Hub
 
@@ -53,5 +53,12 @@ if response.status_code == 200:
     model = hub.load(os.path.join("universal_sentence_encoder_4"))
 else:
     print("Failed to download the model:", response.status_code)
+
+#After Downloading:
+- Extract the file,you would get :
+  saved_model.pb
+  variables/variables.data-00000-of-00001
+  variables/variables.index
+- add all of them to a directory and provide path for model in app.py
 
 
