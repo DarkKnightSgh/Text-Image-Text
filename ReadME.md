@@ -10,8 +10,9 @@ Takes an image as input,this image is passed to ViT model,a caption is generated
 
 Tech Used:
 - Vision Transformer model
+- BlipProcessor, BlipForConditionalGeneration
 - Semantic Embeddings (TensorFlow)
-- BLEU scores
+- BLEU ,Similarity and Relevance scores
 - Mini LM L6 V2 model
 - Streamlit(Frontend)
 
@@ -21,7 +22,7 @@ https://www.kaggle.com/datasets/adityajn105/flickr8k
 
 Disclaimer:
 - Streamlit sometimes needs python/conda virtual environment to run properly
-- Make sure to run model.py once before running main.py
+- Make sure to run model2.py once before running main.py
 
 
 ### Downloading and Loading Universal Sentence Encoder (Version 4) using TensorFlow Hub
