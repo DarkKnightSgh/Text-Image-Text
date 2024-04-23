@@ -5,13 +5,13 @@ Algorithms for information Retrieval Project
 **#About:**
 
 **Image-Text**
-```
+
 Takes an image as input,this image is passed to BLiP model,a caption is generated.Based on the caption generated,using semantic embedding search with comparision,the top five captions similar to the generated caption along with corresponding images are retrieved.Similarity score is also calculated.
-```
+
 **Text-Image**
-```
+
 The text-to-image retrieval system operates by receiving a description of the desired image from the user. Leveraging the pre-trained model 'all-MiniLM-L6-v2', the system processes the predicted description, alongside the preprocessed textual captions of images within the dataset, encoding their semantic meaning. Utilizing cosine similarity, the system calculates the resemblance between the descriptions and the captions, applying a threshold of 0.5. Subsequently, the system ranks the similarities, presenting them in descending order, and exhibits the top five images most closely aligned with the input description.
-```
+
 
 
 Tech Used:
