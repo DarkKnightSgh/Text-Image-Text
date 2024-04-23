@@ -8,17 +8,21 @@ from nltk.translate.bleu_score import sentence_bleu
 import spacy
 import requests
 from model2 import generate_caption
+from sentence_transformers import SentenceTransformer
 
-# Function to extract nouns from tokenized captions
-def extract_nouns(captions):
-    nouns = []
+# Function to extract the main actor (noun) and verb from tokenized captions
+def extract_main_actor_and_verb(captions):
+    main_actors = []
+    verbs = []
+    nlp = spacy.load("en_core_web_sm")
     for caption in captions:
-        # Tokenize caption into words
-        words = re.findall(r'\b\w+\b', caption.lower())
-        # Extract nouns using POS tagging (assuming you have a POS tagging library)
-        # Here, I'm simply assuming that nouns are words longer than 3 characters
-        nouns.extend([word for word in words if len(word) > 3])
-    return nouns
+        doc = nlp(caption)
+        for token in doc:
+            if token.pos_ in ['NOUN', 'PROPN', 'PRON']:
+                main_actors.append(token.text)
+            elif token.pos_ == 'VERB':
+                verbs.append(token.text)
+    return main_actors, verbs
 
 # Function for semantic search using spaCy similarity
 def semantic_search_spacy(generated_caption, captions):
@@ -27,7 +31,7 @@ def semantic_search_spacy(generated_caption, captions):
     return similarity_scores
 
 # Function for semantic search
-def semantic_search(generated_caption, caption_file_path):
+def semantic_search(generated_caption, main_actors, verbs, caption_file_path, uploaded_image_name):
     # Load captions and corresponding image paths from the file
     captions = []
     image_paths = []
@@ -37,25 +41,39 @@ def semantic_search(generated_caption, caption_file_path):
             image_paths.append(image_path)
             captions.append(caption)
 
-    # Calculate BLEU scores for each caption
-    bleu_scores = [sentence_bleu([generated_caption.split()], caption.split()) for caption in captions]
+    # Combine main actors and verbs into a single query string
+    query = ' '.join(main_actors + verbs)
 
-    # Calculate spaCy similarity scores for each caption
-    similarity_scores = semantic_search_spacy(generated_caption, captions)
+    # Calculate sentence embeddings for the generated caption and all captions in the file
+    model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
+    caption_embeddings = model.encode(captions)
+    query_embedding = model.encode([query])[0]
 
-    # Combine BLEU scores and spaCy similarity scores to get relevance scores
-    relevance_scores = np.array(bleu_scores) + np.array(similarity_scores)
+    # Calculate cosine similarity between query and captions
+    similarity_scores = np.dot(caption_embeddings, query_embedding) / (np.linalg.norm(caption_embeddings, axis=1) * np.linalg.norm(query_embedding))
 
-    # Sort captions based on relevance scores
-    sorted_indices = np.argsort(relevance_scores)[::-1][:5]  # Get indices of top 5 captions
-    top_captions = [captions[i] for i in sorted_indices]
-    top_bleu_scores = [bleu_scores[i] for i in sorted_indices]
-    top_similarity_scores = [similarity_scores[i] for i in sorted_indices]
-    top_image_paths = [image_paths[i] for i in sorted_indices]
+    # Sort captions based on similarity scores
+    sorted_indices = np.argsort(similarity_scores)[::-1]
+    top_relevant_captions = []
+    top_similarity_scores = []
+    top_image_paths = []
+    displayed_images = set()  # Set to store filenames of displayed images
+    for i in sorted_indices:
+        if image_paths[i] != uploaded_image_name and image_paths[i] not in displayed_images:
+            top_relevant_captions.append(captions[i])
+            top_similarity_scores.append(similarity_scores[i])
+            top_image_paths.append(image_paths[i])
+            displayed_images.add(image_paths[i])  # Add filename to set of displayed images
+        if len(top_relevant_captions) == 5:  # Get top 5 relevant captions
+            break
 
-    return top_captions, top_bleu_scores, top_similarity_scores, top_image_paths
+    return top_relevant_captions, top_similarity_scores, top_image_paths
 
-# Streamlit appIMAGE-TEXT")
+# List of fallback nouns and pronouns
+fallback_nouns = ['man', 'woman', 'person', 'people']
+fallback_pronouns = ['he', 'she', 'they']
+
+# Streamlit app
 st.title("IMAGE-TEXT")
 
 # Upload an image
@@ -73,20 +91,29 @@ if uploaded_file is not None:
     caption = generate_caption("/tmp/" + uploaded_file.name)
     st.write("Generated caption:", caption)
 
-    # Extract nouns from the generated caption
+    # Extract main actor (noun) and verb from the generated caption
     tokenized_captions = caption.split('\n')
-    nouns = extract_nouns(tokenized_captions)
-    most_common_noun = Counter(nouns).most_common(1)[0][0]
-    st.write("Most common noun:", most_common_noun)
+    main_actors, verbs = extract_main_actor_and_verb(tokenized_captions)
+    
+    # If no main actors or verbs are found, use fallback terms
+    if not main_actors:
+        main_actors = [fallback_nouns[0]]  # Use the first fallback noun
+    
+    if not verbs:
+        verbs = [fallback_pronouns[0]]  # Use the first fallback pronoun
+    
+    generated_main_actor = main_actors[0]  # Select the first main actor
+    generated_verb = verbs[0]  # Select the first verb
+    st.write("Generated main actor:", generated_main_actor)
+    st.write("Generated verb:", generated_verb)
 
-    # Perform semantic search and display the top matching images and captions
+    # Perform semantic search based on the generated main actor and verb
     caption_file_path = "/Users/sirigowrih/Desktop/Text-Image-Text/Flickr8/captions.txt"
-    top_captions, top_bleu_scores, top_similarity_scores, top_image_paths = semantic_search(caption, caption_file_path)
+    top_relevant_captions, top_similarity_scores, top_image_paths = semantic_search(caption, main_actors, verbs, caption_file_path, uploaded_file.name)
 
-    st.write("Top Matching Captions and Images:")
-    for i, (caption, bleu_score, similarity_score, image_path) in enumerate(zip(top_captions, top_bleu_scores, top_similarity_scores, top_image_paths)):
+    st.write("Top 5 Relevant Captions and Images:")
+    for i, (caption, similarity_score, image_path) in enumerate(zip(top_relevant_captions, top_similarity_scores, top_image_paths), 1):
         full_image_path = os.path.join("/Users/sirigowrih/Desktop/Text-Image-Text/Flickr8/Images/", image_path)
-        st.write(f"{i+1}. Caption: {caption}")
-        st.write(f"   BLEU Score: {bleu_score}")
+        st.write(f"{i}. Caption: {caption}")
         st.write(f"   Similarity Score: {similarity_score}")
         st.image(Image.open(full_image_path), caption="Matched Image", use_column_width=True)
