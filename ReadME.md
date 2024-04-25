@@ -26,6 +26,13 @@ Dataset Link:
 https://www.kaggle.com/datasets/adityajn105/flickr8k
 (Make sure to adjust the paths accordingly while running)
 
+
+**HuggingFaceModels:**
+1) https://huggingface.co/Salesforce/blip-image-captioning-base   - BLIP model
+2) https://huggingface.co/nlpconnect/vit-gpt2-image-captioning    - ViT model
+3) https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2  - all-MiniLM-L6-V2
+
+
 Disclaimer:
 - Streamlit sometimes needs python/conda virtual environment to run properly
 - Make sure to run model2.py once before running main.py
