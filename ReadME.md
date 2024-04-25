@@ -2,7 +2,7 @@
 
 **Algorithms for information Retrieval Project**
 
-###**About:**
+## **About:**
 
 **Image-Text**
 
@@ -14,7 +14,7 @@ The text-to-image retrieval system operates by receiving a description of the de
 
 
 
-###Tech Used:
+## Tech Used:
 - Vision Transformer model
 - BlipProcessor, BlipForConditionalGeneration
 - Semantic Embeddings (TensorFlow)
@@ -22,12 +22,12 @@ The text-to-image retrieval system operates by receiving a description of the de
 - Mini LM L6 V2 model
 - Streamlit(Frontend)
 
-###Dataset Link:
+## Dataset Link:
 https://www.kaggle.com/datasets/adityajn105/flickr8k
 (Make sure to adjust the paths accordingly while running)
 
 
-###HuggingFaceModels:
+## HuggingFaceModels:
 1) https://huggingface.co/Salesforce/blip-image-captioning-base   - BLIP model
 2) https://huggingface.co/nlpconnect/vit-gpt2-image-captioning    - ViT model
 3) https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2  - all-MiniLM-L6-V2
