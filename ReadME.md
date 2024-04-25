@@ -6,7 +6,7 @@
 
 **Image-Text**
 
-Takes an image as input,this image is passed to BLiP model,a caption is generated.Based on the caption generated,using semantic embedding search with comparision,the top five captions similar to the generated caption along with corresponding images are retrieved.Similarity score is also calculated.
+The image-to-text retrieval system  takes an image as input and passes it through the BLiP (Bidirectional Language-Image Pretraining) model, to generate a descriptive caption for the input image. Using semantic embedding techniques, the generated caption is then compared against a dataset of existing captions and their corresponding images. Through this comparison, the system retrieves the top five captions that are semantically most similar to the generated caption. Along with these similar captions, the system also retrieves the corresponding images associated with each caption. Additionally, a similarity score is calculated for each retrieved caption, indicating the degree of semantic similarity between the generated caption and the retrieved captions. 
 
 **Text-Image**
 
