@@ -1,4 +1,4 @@
-###TEXT-IMAGE-TEXT
+### TEXT-IMAGE-TEXT
 
 **Algorithms for information Retrieval Project**
 
