@@ -37,6 +37,10 @@ Disclaimer:
 - Streamlit sometimes needs python/conda virtual environment to run properly
 - Make sure to run model2.py once before running main.py
 - **Runs on :** http://localhost:8501/
+  
+
+### Drive Link for Encoder-Decoder Model:
+https://drive.google.com/file/d/1MyHcYK7cAvOq3bxb3z2OGMfuNZS0xLyN/view?usp=drive_link
 
 
 ### Downloading and Loading Universal Sentence Encoder (Version 4) using TensorFlow Hub
