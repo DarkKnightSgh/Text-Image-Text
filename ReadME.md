@@ -75,8 +75,9 @@ if response.status_code == 200:
     model = hub.load(os.path.join("universal_sentence_encoder_4"))
 else:
     print("Failed to download the model:", response.status_code)
+```
 
-#After Downloading:
+## After Downloading:
 - Extract the file,you would get :
   saved_model.pb
   variables/variables.data-00000-of-00001
